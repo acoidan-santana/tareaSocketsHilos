@@ -29,20 +29,13 @@ public class SocketsHilosServer {
         try {
             serverSocket = new ServerSocket(PORT);
             System.out.println("Servidor conectado");
-            String randomNumber = randomNumber();
-            System.out.println("El número aleatorio es: " + randomNumber);
             while(true){
                 Socket socket = serverSocket.accept();
-                new AttendToClient(socket, randomNumber).start();
+                new AttendToClient(socket).start();
             }
 
         } catch (IOException ex) {
             Logger.getLogger(SocketsHilosServer.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    public static String randomNumber() {
-        Random random = new Random();
-        String r = "" + (random.nextInt(10) + 1);
-        return r;
     }
 }

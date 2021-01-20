@@ -24,19 +24,18 @@ import java.util.logging.Logger;
 public class AttendToClient extends Thread {
 
     Socket socket;
-    static String randomNumber;
+    String randomNumber;
 
-    public AttendToClient(Socket socket, String randomNumber) {
+    public AttendToClient(Socket socket) {
         this.socket = socket;
-        this.randomNumber = randomNumber;
     }
 
     @Override
     public void run() {
-        talkToClient(socket);
+        talkToClient();
     }
 
-    private static void talkToClient(Socket socket) {
+    private void talkToClient() {
         try {
             InputStream is = socket.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
@@ -45,16 +44,18 @@ public class AttendToClient extends Thread {
             OutputStream os = socket.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
             BufferedWriter bw = new BufferedWriter(osw);
-
+            randomNumber = randomNumber();
+            System.out.println("El número aleatorio es: " + randomNumber);
             do {
+                
                 String lineFromClient = br.readLine();
                 System.out.println(lineFromClient);
                 if (randomNumber.equals(lineFromClient)) {
                     bw.write("Lo has adivinado");
                     bw.newLine();
                     bw.flush();
-                    randomNumber ="" + (new Random().nextInt(10) +1);
-                    System.out.println("El nuevo número es: " + randomNumber);
+                    /*randomNumber ="" + (new Random().nextInt(10) +1);
+                    System.out.println("El nuevo número es: " + randomNumber);*/
                 } else {
                     bw.write("No lo has adivinado");
                     bw.newLine();
@@ -65,6 +66,11 @@ public class AttendToClient extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(SocketsHilosServer.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public String randomNumber() {
+        Random random = new Random();
+        String r = "" + (random.nextInt(10) + 1);
+        return r;
     }
 
 }
